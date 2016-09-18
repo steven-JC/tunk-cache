@@ -20,6 +20,7 @@
 
     tunk.hook('callAction', function(origin){
         return function(dispatch, originAction, args, module, moduleName, actionName,  options){
+            //if(args[args.length-1]==='force') 
             var result;
             if(options.cache && (result=getFromCache(moduleName, actionName, options.cache))){
                 dispatch.call(module, result);
@@ -76,10 +77,10 @@
 
         switch (type){
             case 'sessionStorage':
-                window.sessionStorage[key] = JSON.stringify(data);
+                window.sessionStorage[key] = data?JSON.stringify(data):'';
                 break;
             case 'localStorage':
-                window.localStorage[key] = JSON.stringify(data);
+                window.localStorage[key] = data?JSON.stringify(data):'';
                 break;
             default:
                 cache[key] = data;
