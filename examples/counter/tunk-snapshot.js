@@ -5,9 +5,14 @@
 
 
     //记录每个动作 更新的 字段，动作启动后，检测是否需要从快照中load数据，load的时候判断指针是否相等，如果相等就不执行动作
+    // this.snapshot('increment');
 
     tunk.hook('initModule', function(origin){
         return function(module, store, moduleName, options){
+
+            module.prototype.snapshot=function(){
+                
+            }
 
             var obj = origin(module, store, moduleName, options);
             if(options.snapshot) {
