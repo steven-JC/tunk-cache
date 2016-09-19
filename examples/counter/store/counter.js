@@ -9,7 +9,7 @@ import {create, action} from 'tunk';
 
 
 */
-@create({wake:'ls'})
+@create({snapshot:'ls'})
 export default class counter {
   //不允许异步，应该保持简单
   constructor(){

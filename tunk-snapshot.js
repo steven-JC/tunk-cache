@@ -9,10 +9,10 @@
         return function(module, store, moduleName, options){
 
             var obj = origin(module, store, moduleName, options);
-            if(options.wake) {
+            if(options.snapshot) {
                 if (obj.state) {
-                    Object.assign(store[moduleName], wakeFromCache(moduleName, options.wake));
-                } else obj.state = wakeFromCache(moduleName, options.wake);
+                    Object.assign(store[moduleName], wakeFromCache(moduleName, options.snapshot));
+                } else obj.state = wakeFromCache(moduleName, options.snapshot);
             }
             return obj;
         }
@@ -20,8 +20,8 @@
 
     tunk.hook('storeNewState', function(origin){
         return function(obj, moduleName, actionName, options){
-            if(options.wake){
-                setToCache(moduleName, obj, options.wake);
+            if(options.snapshot){
+                setToCache(moduleName, obj, options.snapshot);
             }
             origin(obj, moduleName, actionName, options);
         }
