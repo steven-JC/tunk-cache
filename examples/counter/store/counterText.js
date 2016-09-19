@@ -1,7 +1,7 @@
 import {create, action, watch} from 'tunk';
 
 
-@create({isolate:'deep'})
+@create({isolate:'deep', wake:'ls'})
 export default class counterText {
   //不允许异步，应该保持简单
   constructor(){
@@ -10,7 +10,7 @@ export default class counterText {
     };
   }
 
-  @watch('counter.count',{cache:'sessionStorage'})
+  @watch('counter.count')
   setText(n){
     return {text:this.getText()[n % 4]};
   }
