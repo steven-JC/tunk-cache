@@ -5,11 +5,17 @@
 
 
     //记录每个动作 更新的 字段，动作启动后，检测是否需要从快照中load数据，load的时候判断指针是否相等，如果相等就不执行动作
-    // this.snapshot('increment');
+    //让用户手动决定哪些数据经过缓存，哪些不经过
+    //用户自定义存储方式
+    
+    // this.snapshot('increment'); 第一次：执行动作，缓存数据，，第二次：直接拿数据
+    // this.snapshot({count:2}); 第一次：缓存数据
+    // this.dispatch('increment'); 强制执行动作，更改缓存数据
 
     tunk.hook('initModule', function(origin){
         return function(module, store, moduleName, options){
-
+            
+            //存数据，取数据，通过缓存快捷存取  snsh
             module.prototype.snapshot=function(){
                 
             }
