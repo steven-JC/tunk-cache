@@ -1,4 +1,3 @@
-# tunk-cache
-To cache the result of action, with @action({cache:true})
+# tunk-snapshot
+Quickly restore your application view when your application starts up, just like keeping a snapshot of your application.
 
-## developing
