@@ -78,10 +78,9 @@
 
             function snapshot(arg){
                 if(typeof arg === 'string' && arg.indexOf('.')>0){
-                    arg=arg.split('.');
-                    if(options.snapshot && (result=getFromCache(arg[0], arg[1], options.snapshot))){
-                        return dispatch.call(module, result);
-                    }
+                    var args = Array.prototype.slice.call(arguments);
+                    args.push('_SNAPSHOT_');
+                    return apply(dispatch, args, module);
                 }
                 return apply(dispatch, arguments, module);
             }
