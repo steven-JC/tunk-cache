@@ -11,6 +11,10 @@ class Btn extends Component {
     count: PropTypes.number.isRequired
   }
 
+  componentWillMount(){
+    this.snapshot('counter.decrement');
+  }
+
   decrement(){
     this.dispatch('counter.decrement');
   }

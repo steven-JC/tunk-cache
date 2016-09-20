@@ -1,15 +1,6 @@
 import {create, action} from 'tunk';
 
-/*
-
-  action随时更新cache，
-
-  动作为单位
-      数据进行缓存 - 直接拿缓存作为动作结果 -- 应用唤醒 第一个动作才有意义
-
-
-*/
-@create({snapshot:'ls'})
+@create
 export default class counter {
   //不允许异步，应该保持简单
   constructor(){
@@ -21,10 +12,10 @@ export default class counter {
   @action
   increment(){
     console.log(this);
-    return {count:this.addOne()};
+    this.increment_();
   }
 
-  @action
+  @action({snapshot:'local'})
   decrement(){
     return {count:this.state.count-1};
   }
@@ -41,6 +32,10 @@ export default class counter {
     setTimeout(() => {
       this.dispatch('increment');
     }, 1000)
+  }
+
+  increment_(){
+    this.dispatch({count:this.addOne()});
   }
 
   addOne(){
