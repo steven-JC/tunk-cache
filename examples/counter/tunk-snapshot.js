@@ -11,7 +11,7 @@
         return function(module, store, moduleName, options){
 
             module.prototype.snapshot=function(){
-                
+
             }
 
             var obj = origin(module, store, moduleName, options);
