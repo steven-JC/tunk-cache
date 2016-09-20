@@ -53,15 +53,14 @@
 
             return origin(dispatch, originAction, args, module, moduleName, actionName,  options);
 
-
             function snapshot(arg){
                 if(typeof arg === 'object' && arg.constructor === Object){
                     setToCache(moduleName, actionName, arg, options.snapshot);
                     return dispatch.call(module, arg);
                 }else if(typeof arg === 'string' && arg.indexOf('.')>0){
-                    if(options.snapshot && (result=getFromCache(moduleName, actionName, options.snapshot))){
-                        return dispatch.call(module, result);
-                    }
+                    var args = Array.prototype.slice.call(arguments);
+                    args.push('_SNAPSHOT_');
+                    apply(dispatch, args, module);
                 }
                 return apply(dispatch, arguments, module);
             }
@@ -78,11 +77,9 @@
             origin(dispatch, watcher, newValue, watchingStatePath, watchingModule, fromAction, module, moduleName, watcherName, options);
 
             function snapshot(arg){
-                if(typeof arg === 'object' && arg.constructor === Object){
-                    setToCache(moduleName, watcherName, arg, options.snapshot);
-                    return dispatch.call(module, arg);
-                }else if(typeof arg === 'string' && arg.indexOf('.')>0){
-                    if(options.snapshot && (result=getFromCache(moduleName, watcherName, options.snapshot))){
+                if(typeof arg === 'string' && arg.indexOf('.')>0){
+                    arg=arg.split('.');
+                    if(options.snapshot && (result=getFromCache(arg[0], arg[1], options.snapshot))){
                         return dispatch.call(module, result);
                     }
                 }
