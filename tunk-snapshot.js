@@ -44,7 +44,7 @@
 
             if(for_snapshot) {
                 if (result = getFromCache(moduleName, actionName, options.snapshot)) {
-                    dispatch.call(module, result);
+                    return dispatch.call(module, result);
                 }else {
                     args=Array.prototype.slice.call(args);
                     args.pop();

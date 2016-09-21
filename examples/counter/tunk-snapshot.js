@@ -44,7 +44,7 @@
 
             if(for_snapshot) {
                 if (result = getFromCache(moduleName, actionName, options.snapshot)) {
-                    dispatch.call(module, result);
+                    return dispatch.call(module, result);
                 }else {
                     args=Array.prototype.slice.call(args);
                     args.pop();
@@ -169,12 +169,10 @@
 
         this.storages = storageTypes;
         this.caches = {};
-        this.keyss = {};
 
         this.type
         this.storage=null;
         this.cache=null;
-        this.keys=null;
     }
     Storage.prototype={
         constructor:Storage,
@@ -190,36 +188,47 @@
 
             this.cache = this.caches[type] = this.caches[type] || {};
 
-            this.keys = this.keyss[type] = this.keyss[type] || this.storage.getItem('snapshot-keys') || {};
-
             return this;
 
         },
-        setItem:function(moduleName, actionName, data){
+        setItem:function(moduleName, actionName, data, args){
 
-            this.keys[moduleName] = this.keys[moduleName] || {};
-            if(actionName) this.keys[moduleName][actionName] = Object.keys(data);
+            if(args && args.length){
+                args = JSON.stringify(args).replace(/[\{\[\}\]]/g,'');
+                if(args.length>32 && args.length<256) args = args.substr(0,32) + args.length;
+                else if(args.length>256) args = '';
+            }else args='';
 
-            this.cache[moduleName] = this.cache[moduleName] || this.storage.getItem(moduleName) || {};
+            this.cache[moduleName] = this.cache[moduleName] || this.storage.getItem(moduleName) || {data:{},keys:{},args:{}};
 
-            Object.assign(this.cache[moduleName], data);
+            this.cache[moduleName].args[actionName] = args;
+            this.cache[moduleName].keys[actionName] = Object.keys(data);
+            Object.assign(this.cache[moduleName].data, data);
 
             this.storage.setItem(moduleName, this.cache[moduleName]);
-            this.storage.setItem('snapshot-keys', this.keys);
 
         },
-        getItem:function(moduleName, actionName){
+        getItem:function(moduleName, actionName, args){
 
-            this.cache[moduleName] = this.cache[moduleName] || this.storage.getItem(moduleName) || {};
+            if(!this.cache[moduleName] && !(this.cache[moduleName]=this.storage.getItem(moduleName))) return;
 
-            if(!actionName) return this.cache[moduleName];
+            if(actionName && !this.cache[moduleName].data[actionName]) return;
+
+            if(!actionName) return this.cache[moduleName].data;
             else {
-                var keys=this.keys[moduleName][actionName]||[],key,data={},length=keys.length;
+
+                if(args && args.length)
+                    args = JSON.stringify(args).replace(/[\{\[\}\]]/g,'');
+                else args='';
+
+                if(this.cache[moduleName].args[actionName] !== args) return;
+
+                var keys=this.cache[moduleName].keys[actionName]||[],key,data={},length=keys.length;
 
                 if(!length) return;
 
                 while(key=keys.pop()){
-                    if(typeof this.cache[moduleName][key] !== 'undefined') data[key]=this.cache[moduleName][key];
+                    if(typeof this.cache[moduleName].data[key] !== 'undefined') data[key]=this.cache[moduleName].data[key];
                 }
 
                 if(Object.keys(data).length===length ) return data;
@@ -232,6 +241,14 @@
     var storage = new Storage();
 
 
+    function abstract(str){
+        if(!str) return '';
+        str = str.toString();
+        if(str.length<32) return str;
+
+        
+
+    }
 
 
 })();

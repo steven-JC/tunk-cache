@@ -10,11 +10,15 @@ export default class counterText {
     };
   }
 
-  @watch('counter.count')
+  @action
   setText(n){
     return {text:this.getText()[n % 4]};
   }
 
+  @watch('counter.count')
+  watchCount(n){
+    this.setText(n);
+  }
   getText(){
     return {
       0:'hello world',
