@@ -38,7 +38,7 @@
     tunk.hook('callAction', function(origin){
         return function(dispatch, originAction, args, module, moduleName, actionName,  options){
 
-            var result, for_snapshot = args[args.length-1]==='_SNAPSHOT_';
+            var result, for_snapshot = args[args.length-1] === '_SNAPSHOT_';
 
             module.snapshot=snapshot;
 
@@ -246,7 +246,7 @@
         str = str.toString();
         if(str.length<32) return str;
 
-        
+
 
     }
 

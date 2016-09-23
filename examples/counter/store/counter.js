@@ -1,5 +1,21 @@
 import {create, action} from 'tunk';
 
+
+/*
+
+     缓存词典
+     记忆应用部分状态
+
+
+
+
+* */
+
+
+
+
+
+
 @create
 export default class counter {
   //不允许异步，应该保持简单
